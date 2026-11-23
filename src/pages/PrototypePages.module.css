@@ -4,6 +4,10 @@
     linear-gradient(#0d162e0a, #0d162e0a),
     url('/images/hero.jpg') center 48% / cover;
 }
+.saveSearch:disabled {
+  color: var(--text-secondary-default);
+  cursor: default;
+}
 .heroInner {
   max-width: 1328px;
   width: calc(100% - 48px);

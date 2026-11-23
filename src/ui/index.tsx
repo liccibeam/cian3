@@ -24,6 +24,12 @@ export function kitClass(path: string, ...names: (string | false | undefined)[])
 }
 
 const extraIcons: Record<string, string> = {
+  Home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/>',
+  Key: '<circle cx="8" cy="8" r="5"/><path d="m12 12 9 9m-6-6 3-3m0 6 3-3"/>',
+  Building: '<path d="M5 21V5h9v16M14 10h5v11M3 21h18M8 8h3M8 12h3M8 16h3M8 21v-2h3v2"/>',
+  Briefcase:
+    '<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3M3 12a22 22 0 0 0 18 0M12 11v4"/>',
+  Bookmark: '<path d="M6 3h12v18l-6-4-6 4Z"/>',
   Heart:
     '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
   Menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',

@@ -1,0 +1,321 @@
+.home {
+  --home-gap: var(--unit_4, 16px);
+  padding-bottom: var(--unit_6, 24px);
+}
+.discovery {
+  padding: var(--unit_3, 12px) var(--home-gap) var(--unit_5, 20px);
+}
+.discovery h1 {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.7px;
+}
+.subtitle {
+  color: var(--text-secondary-default);
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: 2px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--background-secondary);
+  border-radius: 12px;
+  padding: 6px 6px 6px 12px;
+  margin-top: 20px;
+}
+.search > span {
+  color: var(--icon-secondary-default);
+  flex: none;
+}
+.search input {
+  border: 0;
+  outline: none;
+  padding: 0;
+  width: 0;
+  min-width: 0;
+  flex: 1;
+  background: none;
+  color: var(--text-primary-default);
+  font-size: 14px;
+  line-height: 24px;
+}
+.search input::placeholder {
+  color: var(--text-secondary-default);
+  opacity: 1;
+}
+.search:focus-within {
+  outline: 2px solid var(--stroke-control-focused);
+}
+.verticals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: 76px 76px;
+  gap: 8px;
+  margin-top: 12px;
+}
+.verticals > a,
+.verticals > button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  gap: 4px;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--background-secondary);
+  color: var(--text-primary-default);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+.verticals > :focus-visible,
+.resumeHeader button:focus-visible,
+.ad button:focus-visible {
+  outline: 2px solid var(--stroke-control-focused);
+  outline-offset: 3px;
+}
+.verticals > a:hover,
+.verticals > button:hover {
+  filter: brightness(0.97);
+}
+.verticals strong {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+}
+.verticals small {
+  display: none;
+}
+.verticals > span,
+.verticals > button > span {
+  color: var(--text-main-default);
+}
+.verticals .buy {
+  grid-row: span 2;
+  background: var(--surface-main-default);
+  padding: 14px;
+  justify-content: flex-start;
+  gap: 8px;
+}
+.buy > span:first-child {
+  width: 40px !important;
+  height: 40px !important;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--background-primary);
+  color: var(--text-main-default);
+}
+.buy strong {
+  font-size: 16px;
+  line-height: 20px;
+  margin-top: 2px;
+}
+.buy small {
+  display: block;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-secondary-default);
+}
+.buyArrow {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  color: var(--text-main-default);
+}
+.resume {
+  margin: 0 var(--home-gap) 24px;
+  padding: 12px;
+  border: 1px solid var(--stroke-divider-default);
+  border-radius: 12px;
+}
+.resumeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-secondary-default);
+  margin-bottom: 8px;
+}
+.resumeHeader button {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: 0;
+  padding: 0 0 0 12px;
+  min-height: 24px;
+  color: var(--text-main-default);
+  font-size: 12px;
+  cursor: pointer;
+}
+.resumeLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary-default);
+  text-decoration: none;
+}
+.resumeLink > span:last-child {
+  flex: none;
+  color: var(--icon-secondary-default);
+}
+.resumeIcon {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--text-main-default);
+  background: var(--surface-main-default);
+}
+.resumeText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.resumeText strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 18px;
+}
+.resumeText small {
+  color: var(--text-secondary-default);
+  font-size: 12px;
+  line-height: 16px;
+}
+.recommendations {
+  padding: 0 var(--home-gap);
+}
+.sectionHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.sectionHeading h2 {
+  font-size: 22px;
+  line-height: 28px;
+}
+.sectionHeading p {
+  color: var(--text-secondary-default);
+  font-size: 12px;
+  line-height: 18px;
+  margin-top: 2px;
+}
+.sectionHeading > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--background-secondary);
+  color: var(--text-primary-default);
+  border-radius: 50%;
+}
+.feed {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 12px;
+}
+.ad {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-main-default);
+  border-radius: 12px;
+  margin: 28px 0;
+}
+.adCopy {
+  padding: 16px;
+  position: relative;
+  z-index: 1;
+}
+.adLabel {
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary-default);
+}
+.ad h3 {
+  font-size: 20px;
+  line-height: 24px;
+  margin-top: 8px;
+  letter-spacing: -0.4px;
+}
+.ad p {
+  font-size: 11px;
+  line-height: 16px;
+  margin-top: 8px;
+}
+.ad button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-main-default);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+}
+.ad img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% center;
+}
+.allListings {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  margin-top: 28px;
+  border-radius: 10px;
+  background: var(--surface-main-default);
+  font-size: 14px;
+  font-weight: 700;
+}
+.savedList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.savedList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--stroke-divider-default);
+}
+.savedList a {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.savedList a span {
+  font-size: 12px;
+  color: var(--text-secondary-default);
+}

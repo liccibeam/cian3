@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button, Icon } from '@/ui';
 import { usePrototype } from '@/hooks/prototype-context';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import s from './Layout.module.css';
 
 const navigation = [
@@ -145,12 +146,74 @@ export function Footer() {
     </footer>
   );
 }
-export function AppShell({ children }: { children: ReactNode }) {
+function MobileHeader() {
   return (
-    <div className={s.shell}>
-      <Header />
+    <header className={s.appHeader}>
+      <a className="skip-link" href="#main">
+        К содержимому
+      </a>
+      <Link to="/" aria-label="Циан — главная">
+        <img src="/images/logo.svg" alt="Циан" width="98" height="28" />
+      </Link>
+      <span className={s.appRegion}>
+        <Icon name="MapLocation16" size={16} /> Москва
+      </span>
+    </header>
+  );
+}
+
+function MobileNavigation() {
+  const { favorites, showDemo } = usePrototype();
+  const { pathname, search } = useLocation();
+  const isFavorites =
+    pathname === '/search' && new URLSearchParams(search).get('favorites') === '1';
+  return (
+    <nav className={s.tabbar} aria-label="Навигация приложения">
+      <Link to="/" aria-current={pathname === '/' ? 'page' : undefined}>
+        <Icon name="Home" size={24} />
+        <span>Главная</span>
+      </Link>
+      <Link to="/search" aria-current={pathname === '/search' && !isFavorites ? 'page' : undefined}>
+        <Icon name="ActionSearch16" size={24} />
+        <span>Поиск</span>
+      </Link>
+      <Link
+        to="/search?favorites=1"
+        aria-label={`Избранное: ${favorites.length}`}
+        aria-current={isFavorites ? 'page' : undefined}
+      >
+        <span className={s.tabIcon}>
+          <Icon name="Heart" size={24} />
+          {favorites.length > 0 && <span className={s.tabCount}>{favorites.length}</span>}
+        </span>
+        <span>Избранное</span>
+      </Link>
+      <button onClick={() => showDemo('Сообщения')}>
+        <Icon name="Message" size={24} />
+        <span>Сообщения</span>
+      </button>
+      <button onClick={() => showDemo('Профиль')}>
+        <Icon name="ActionProfile24" size={24} />
+        <span>Профиль</span>
+      </button>
+    </nav>
+  );
+}
+
+export function AppShell({
+  children,
+  mobileApp = false,
+}: {
+  children: ReactNode;
+  mobileApp?: boolean;
+}) {
+  const isMobile = useIsMobile();
+  const app = mobileApp && isMobile;
+  return (
+    <div className={clsx(s.shell, app && s.appShell)}>
+      {app ? <MobileHeader /> : <Header />}
       <div className={s.content}>{children}</div>
-      <Footer />
+      {app ? <MobileNavigation /> : <Footer />}
     </div>
   );
 }
