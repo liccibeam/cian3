@@ -12,9 +12,14 @@ import {
 } from '@/components/Realty';
 import { filterListings, listingLabel, listings, resultsLabel } from '@/data/listings';
 import { usePrototype } from '@/hooks/prototype-context';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { normalizeSearch } from '@/data/searches';
+import { MobileHome } from './MobileHome';
 import s from './PrototypePages.module.css';
 
 export function HomePage() {
+  const isMobile = useIsMobile();
+  if (isMobile) return <MobileHome />;
   return (
     <AppShell>
       <main id="main">
@@ -75,22 +80,31 @@ function ResultsSkeleton() {
 }
 export function SearchPage() {
   const [params, setParams] = useSearchParams();
-  const { favorites, showDemo, notify } = usePrototype();
+  const { favorites, showDemo, saveSearch, savedSearches, rememberSearch } = usePrototype();
   const [loading, setLoading] = useState(true);
   const signature = params.toString();
+  useEffect(() => {
+    // Opening the search tab is navigation, not a new search across all of Moscow.
+    if (normalizeSearch(signature)) rememberSearch(new URLSearchParams(signature));
+  }, [signature, rememberSearch]);
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 280);
     return () => clearTimeout(timer);
   }, [signature]);
   const apply = (next: URLSearchParams) => {
+    rememberSearch(next);
     setLoading(next.toString() !== signature);
     setParams(next);
+  };
+  const resetSearch = () => {
+    rememberSearch(new URLSearchParams());
+    setLoading(true);
   };
   const state = params.get('state');
   const found = state === 'empty' ? [] : filterListings(listings, params, favorites);
   const isFavorites = params.get('favorites') === '1';
   return (
-    <AppShell>
+    <AppShell mobileApp>
       <PageLayout>
         <SearchFilters key={signature} params={params} onApply={apply} />
         <Breadcrumbs
@@ -120,14 +134,17 @@ export function SearchPage() {
           >
             На карте
           </Button>
-          <button
-            className={s.saveSearch}
-            onClick={() =>
-              notify('Параметры поиска сохранены в ссылке. Скопируйте адрес страницы.')
-            }
-          >
-            Сохранить поиск
-          </button>
+          {!isFavorites && (
+            <button
+              className={s.saveSearch}
+              onClick={() => saveSearch(params)}
+              disabled={savedSearches.includes(normalizeSearch(params))}
+            >
+              {savedSearches.includes(normalizeSearch(params))
+                ? 'Поиск сохранён'
+                : 'Сохранить поиск'}
+            </button>
+          )}
         </div>
         {(params.has('q') || params.has('rooms') || params.has('maxPrice') || isFavorites) && (
           <div className={s.activeFilters}>
@@ -143,7 +160,7 @@ export function SearchPage() {
                 .filter(Boolean)
                 .join(' · ')}
             </Badge>
-            <Link to="/search" onClick={() => setLoading(true)}>
+            <Link to="/search" onClick={resetSearch}>
               Сбросить фильтры
             </Link>
           </div>
@@ -178,7 +195,7 @@ export function SearchPage() {
                 ? 'Нажмите на сердечко в карточке, чтобы вернуться к ней позже.'
                 : 'Попробуйте увеличить бюджет или выбрать другой район.'}
             </p>
-            <Link className={s.primaryLink} to="/search" onClick={() => setLoading(true)}>
+            <Link className={s.primaryLink} to="/search" onClick={resetSearch}>
               Показать все квартиры
             </Link>
           </section>
@@ -199,13 +216,15 @@ export function DetailPage() {
   const location = useLocation();
   const listing = listings.find((item) => item.id === id);
   const { notify } = usePrototype();
+  const candidate: unknown = location.state?.from;
   const from =
-    typeof location.state?.from === 'string' && location.state.from.startsWith('/search')
-      ? location.state.from
+    typeof candidate === 'string' && /^(\/search(?:\?|$)|\/(?:\?|$))/.test(candidate)
+      ? candidate
       : '/search';
+  const fromHome = from === '/' || from.startsWith('/?');
   if (!listing) return <NotFoundPage />;
   return (
-    <AppShell>
+    <AppShell mobileApp>
       <PageLayout aside={<ListingActions listing={listing} />}>
         <Breadcrumbs
           items={[
@@ -214,8 +233,8 @@ export function DetailPage() {
             { label: listing.district },
           ]}
         />
-        <Link className={s.back} to={from}>
-          ← К результатам поиска
+        <Link className={s.back} to={from} state={{ restoreScroll: location.state?.returnScroll }}>
+          {fromHome ? '← На главную' : '← К результатам поиска'}
         </Link>
         <div className={s.detailLabels}>
           <Badge tone="positive">Хорошая цена</Badge>
@@ -391,6 +410,16 @@ export function PatternsPage() {
             <Link to="/search?state=empty">Пустые данные</Link>
             <Link to="/search?state=error">Ошибка и повторная попытка</Link>
             <Link to="/listing/unknown">Неизвестное объявление</Link>
+          </div>
+          <h2>Состояния мобильной главной</h2>
+          <p className="muted">
+            Откройте на ширине до 760 px. Примеры работают в отдельной сессии и не меняют ваши
+            сохранённые данные.
+          </p>
+          <div className={s.patternLinks}>
+            <a href="/?scenario=new">Новый пользователь</a>
+            <a href="/?scenario=returning">Возвращающийся с сохранённым поиском</a>
+            <a href="/">Главная с моими данными</a>
           </div>
         </div>
       </PageLayout>

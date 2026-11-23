@@ -1,4 +1,12 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
+import {
+  emptyHistory,
+  exampleSearch,
+  normalizeSearch,
+  readSearchHistory,
+  searchStorageKey,
+} from '@/data/searches';
 import { PrototypeContext } from './prototype-context';
 import { Button, Modal } from '@/ui';
 const storageKey = 'cian3:favorites:v1';
@@ -11,16 +19,58 @@ function readFavorites(): string[] {
   }
 }
 export function PrototypeProvider({ children }: { children: ReactNode }) {
-  const [favorites, setFavorites] = useState(readFavorites);
+  const location = useLocation();
+  // Review examples are isolated for this page session; they never overwrite personal data.
+  const [scenario] = useState(() => new URLSearchParams(location.search).get('scenario'));
+  const preview = scenario === 'new' || scenario === 'returning';
+  const [history, setHistory] = useState(() =>
+    scenario === 'new'
+      ? emptyHistory
+      : scenario === 'returning'
+        ? { lastSearch: exampleSearch, savedSearches: [exampleSearch] }
+        : readSearchHistory(),
+  );
+  const [favorites, setFavorites] = useState(() => (preview ? [] : readFavorites()));
   const [demo, setDemo] = useState('');
   const [notice, setNotice] = useState('');
   useEffect(() => {
+    if (preview) return;
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(favorites));
     } catch {
       /* Prototypes remain usable when storage is unavailable. */
     }
-  }, [favorites]);
+  }, [favorites, preview]);
+  useEffect(() => {
+    if (preview) return;
+    try {
+      localStorage.setItem(searchStorageKey, JSON.stringify(history));
+    } catch {
+      /* Keep the current session usable without storage. */
+    }
+  }, [history, preview]);
+  const rememberSearch = useCallback((params: URLSearchParams) => {
+    if (params.get('favorites') === '1' || params.has('state')) return;
+    const search = normalizeSearch(params);
+    setHistory((current) =>
+      current.lastSearch === search ? current : { ...current, lastSearch: search },
+    );
+  }, []);
+  const saveSearch = (params: URLSearchParams) => {
+    const search = normalizeSearch(params);
+    setHistory((current) => ({
+      lastSearch: search,
+      savedSearches: [search, ...current.savedSearches.filter((item) => item !== search)],
+    }));
+    setNotice('Поиск сохранён');
+  };
+  const removeSearch = (search: string) => {
+    setHistory((current) => ({
+      ...current,
+      savedSearches: current.savedSearches.filter((item) => item !== search),
+    }));
+    setNotice('Поиск удалён из сохранённых');
+  };
   useEffect(() => {
     if (!notice) return;
     const timer = setTimeout(() => setNotice(''), 3500);
@@ -33,7 +83,16 @@ export function PrototypeProvider({ children }: { children: ReactNode }) {
   };
   return (
     <PrototypeContext.Provider
-      value={{ favorites, toggleFavorite, showDemo: setDemo, notify: setNotice }}
+      value={{
+        favorites,
+        toggleFavorite,
+        showDemo: setDemo,
+        notify: setNotice,
+        ...history,
+        rememberSearch,
+        saveSearch,
+        removeSearch,
+      }}
     >
       {children}
       <div className="prototype-toast" role="status">

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { UIKitPage } from './pages/UIKitPage';
 import { PrototypeProvider } from './hooks/PrototypeContext';
+import { RouteScroll } from './components/RouteScroll';
 import {
   HomePage,
   SearchPage,
@@ -13,11 +14,11 @@ import {
 export default function App() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
     document.title = pathname === '/ui' ? 'Циан · UI kit' : 'Циан · Прототипы';
   }, [pathname]);
   return (
     <PrototypeProvider>
+      <RouteScroll />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />

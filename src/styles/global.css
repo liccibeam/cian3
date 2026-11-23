@@ -152,3 +152,8 @@ legend {
   font-size: 14px;
   box-shadow: 0 4px 24px #0d162e33;
 }
+@media (max-width: 760px) {
+  .prototype-toast {
+    bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+}

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Badge, Button, Icon, Input, Modal, Select } from '@/ui';
@@ -22,15 +22,31 @@ export function FavoriteButton({ listing }: { listing: Listing }) {
   );
 }
 
-export function ListingCard({ listing, compact = false }: { listing: Listing; compact?: boolean }) {
+export function ListingCard({
+  listing,
+  compact = false,
+  feed = false,
+}: {
+  listing: Listing;
+  compact?: boolean;
+  feed?: boolean;
+}) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { showDemo } = usePrototype();
   const to = `/listing/${listing.id}`;
-  const state = { from: location.pathname + location.search };
+  const openCard = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      return;
+    event.preventDefault();
+    navigate(to, {
+      state: { from: location.pathname + location.search, returnScroll: window.scrollY },
+    });
+  };
   return (
-    <article className={clsx(s.card, compact && s.compact)}>
+    <article className={clsx(s.card, compact && s.compact, feed && s.feed)}>
       <div className={s.photo}>
-        <Link to={to} state={state} tabIndex={-1} aria-hidden="true">
+        <Link to={to} onClick={openCard} tabIndex={-1} aria-hidden="true">
           <img src={listing.images[0]} alt="" loading="lazy" />
         </Link>
         <FavoriteButton listing={listing} />
@@ -46,7 +62,7 @@ export function ListingCard({ listing, compact = false }: { listing: Listing; co
         </span>
       </div>
       <div className={s.cardBody}>
-        <Link className={s.cardTitle} to={to} state={state}>
+        <Link className={s.cardTitle} to={to} onClick={openCard}>
           {listingLabel(listing)}
         </Link>
         <strong className={s.price}>{money(listing.price)}</strong>
@@ -89,14 +105,17 @@ export function ListingCard({ listing, compact = false }: { listing: Listing; co
 
 export function SearchBar() {
   const navigate = useNavigate();
-  const { showDemo } = usePrototype();
+  const { showDemo, rememberSearch } = usePrototype();
   return (
     <div className={s.heroSearch}>
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          const q = new FormData(event.currentTarget).get('q') as string;
-          navigate(q ? `/search?q=${encodeURIComponent(q)}` : '/search');
+          const q = String(new FormData(event.currentTarget).get('q') || '').trim();
+          const params = new URLSearchParams();
+          if (q) params.set('q', q);
+          rememberSearch(params);
+          navigate(params.size ? `/search?${params}` : '/search');
         }}
       >
         <Icon name="ActionSearch16" size={24} />
