@@ -1,0 +1,63 @@
+{
+  "base": "http://127.0.0.1:5195",
+  "viewport": [
+    390,
+    844
+  ],
+  "device_scale_factor": 2,
+  "screens": {
+    "home": {
+      "url": "http://127.0.0.1:5195/?scenario=returning",
+      "title": "Циан · Прототипы",
+      "height": 1938,
+      "resume": {
+        "x": 29,
+        "y": 439,
+        "width": 332,
+        "height": 36
+      },
+      "resume_text": "2-комнатные квартиры · Сокольники\nДо 20 000 000 ₽"
+    },
+    "search": {
+      "url": "http://127.0.0.1:5195/search?q=%D0%A1%D0%BE%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA%D0%B8&rooms=2&maxPrice=20000000",
+      "title": "Циан · Прототипы",
+      "height": 1306,
+      "card": {
+        "x": 16,
+        "y": 619,
+        "width": 358,
+        "height": 571
+      },
+      "photo": {
+        "x": 16,
+        "y": 643,
+        "width": 358,
+        "height": 240
+      },
+      "card_title": {
+        "x": 16,
+        "y": 899,
+        "width": 279.015625,
+        "height": 24
+      }
+    },
+    "detail": {
+      "url": "http://127.0.0.1:5195/listing/1",
+      "title": "Циан · Прототипы",
+      "height": 1894,
+      "heading": "Продаётся 2-комн. квартира, 54 м²"
+    }
+  },
+  "errors": [],
+  "sha256": {
+    "detail-nav.png": "ba04489cf39a415f756bc2b9f2e74154180e078e02fab755252ec30b3ffbfcf6",
+    "detail-viewport.png": "3611376a7ea3d3ae6a048a38b69e44ba93cd5061abbdc9164f363d02ffa83bba",
+    "detail.png": "61d1b8fc845b414650acdbf32c2830e0d5c1d446197de7ec5daa6e17d8068264",
+    "home-nav.png": "6bab06804fc075ed44e42057904a291ccf56b1384fba221b81b5d16723ae9e00",
+    "home-viewport.png": "8148bac7db794c2d2d16e406e08a4968b3504a35a1aad25179bc6992807aad64",
+    "home.png": "dd073443304715926fa704d671dd6726ca322e242a0aeb8833607ab5fe8f0abb",
+    "search-nav.png": "d53f9c49754da975f57921d34eb6223268d8f45d27581c46cda977c960d0784d",
+    "search-viewport.png": "567a2d6d825e2faf01039f1983aec51cd8529c306a16360a8b45bbd6997f1d3e",
+    "search.png": "415b5e07e067dff020c330024441ade9abae90addb7fa8b0466381606c86161e"
+  }
+}
