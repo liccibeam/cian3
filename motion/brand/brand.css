@@ -1,0 +1,4 @@
+@font-face{font-family:Lato;src:url('fonts/lato-regular.woff2') format('woff2');font-weight:400;font-display:block}
+@font-face{font-family:Lato;src:url('fonts/lato-semibold.woff2') format('woff2');font-weight:600;font-display:block}
+@font-face{font-family:Lato;src:url('fonts/lato-bold.woff2') format('woff2');font-weight:700;font-display:block}
+:root{--font:Lato,Arial,sans-serif;--w-regular:400;--w-medium:600;--w-bold:700;--accent:#0054fd;--accent-ink:#fff;--ink:#0d162e;--ink2:#737f99;--ink3:#a0a8bc;--line:#d9dfe9;--line2:#ebeff5;--soft:#f3f5fa;--surface:#fff;--bg:#f4f6fa;--dark:#0d162e;--dim:13,22,46;--ring-stops:#0054fd,#6b9aff,#0054fd;--r-app:0px}

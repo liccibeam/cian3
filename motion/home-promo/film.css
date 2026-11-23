@@ -1,0 +1,28 @@
+#app{background:transparent;box-shadow:none;overflow:visible}
+#frame{background:#f4f6fa}
+.disc{position:absolute;left:1025px;top:-80px;width:1200px;height:1200px;border-radius:50%;background:#e8efff}
+.brand{position:absolute;left:152px;top:96px;width:190px;height:auto}
+.eyebrow{position:absolute;left:156px;top:248px;font-size:19px;font-weight:700;letter-spacing:.18em;color:var(--accent)}
+.copy{position:absolute;left:150px;top:310px;width:870px}
+.copy h1{font-size:110px;font-weight:700;line-height:1.035;letter-spacing:-.045em}
+.copy h1 span{display:block}
+.copy .blue{color:var(--accent)}
+.copy.final{top:298px}
+.copy.final h1{font-size:132px;line-height:1.015;letter-spacing:-.05em}
+.copy p{margin-top:38px;font-size:30px;line-height:1.4;color:var(--ink2);letter-spacing:-.015em}
+.final-cta{display:inline-flex;align-items:center;gap:22px;margin-top:42px;font-size:30px;font-weight:700;color:var(--accent)}
+.final-cta svg{height:27px;width:27px}
+.chapter{position:absolute;left:156px;bottom:145px;display:flex;align-items:center;gap:15px;font-size:17px;letter-spacing:.035em;color:var(--ink2)}
+.chapter .line{width:32px;height:1px;background:#adb8cf}
+.progress{position:absolute;left:156px;bottom:104px;display:flex;gap:8px}
+.progress i{display:block;position:relative;width:88px;height:3px;background:#dce3ee;overflow:hidden;border-radius:4px}
+.progress b{display:block;width:100%;height:100%;background:var(--accent);transform-origin:left;transform:scaleX(0)}
+#device{position:absolute;left:0;top:0;width:414px;height:868px;border-radius:34px;background:#fff;box-shadow:0 32px 70px -22px rgba(13,22,46,.23),0 3px 14px rgba(13,22,46,.05),inset 0 0 0 1px rgba(13,22,46,.07);transform-origin:0 0}
+#screen{position:absolute;left:12px;top:12px;width:390px;height:844px;overflow:hidden;border-radius:23px;background:#fff}
+.screen-page{position:absolute;left:0;top:0;width:390px;height:844px;overflow:hidden;background:#fff}
+.screen-page>.capture{position:absolute;left:0;top:0;width:390px;height:auto;max-width:none;transform-origin:0 0}
+.screen-page>.nav{position:absolute;bottom:0;left:0;width:390px;height:auto;z-index:2}
+#focus{position:absolute;left:16px;top:394px;width:358px;height:94px;border:2px solid var(--accent);border-radius:12px;pointer-events:none;box-shadow:0 0 0 5px rgba(0,84,253,.07)}
+#touch{position:absolute;width:30px;height:30px;border:2px solid #fff;border-radius:50%;background:rgba(0,84,253,.28);box-shadow:0 0 0 1px rgba(0,84,253,.45);pointer-events:none;z-index:4}
+#pulse{position:absolute;width:74px;height:74px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;z-index:4}
+#subL{display:none}
