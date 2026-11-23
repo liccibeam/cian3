@@ -14,6 +14,7 @@ import clsx from 'clsx';
 import classes from './classes.json';
 import icons from './icons.json';
 import s from './ui.module.css';
+import { trackGoal } from '@/analytics/metrika';
 
 const classMap = classes as Record<string, Record<string, string>>;
 export function kitClass(path: string, ...names: (string | false | undefined)[]) {
@@ -356,13 +357,25 @@ export function Modal({
       aria-labelledby={titleId}
       onCancel={(event) => {
         event.preventDefault();
+        trackGoal('overlay_close', { overlay: title, method: 'escape' });
         onClose();
       }}
-      onClose={onClose}
+      onClose={() => {
+        // StrictMode can close then reopen the same dialog before its queued close event.
+        if (!ref.current?.open) onClose();
+      }}
     >
       <div className={s.modalHeader}>
         <h2 id={titleId}>{title}</h2>
-        <button type="button" onClick={onClose} aria-label="Закрыть окно" className={s.iconButton}>
+        <button
+          type="button"
+          onClick={() => {
+            trackGoal('overlay_close', { overlay: title, method: 'button' });
+            onClose();
+          }}
+          aria-label="Закрыть окно"
+          className={s.iconButton}
+        >
           <Icon name="ActionClose16" />
         </button>
       </div>

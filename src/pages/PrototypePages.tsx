@@ -16,9 +16,12 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { normalizeSearch } from '@/data/searches';
 import { MobileHome } from './MobileHome';
 import s from './PrototypePages.module.css';
+import { trackGoal } from '@/analytics/metrika';
+import { useGoalView } from '@/analytics/useGoalView';
 
 export function HomePage() {
   const isMobile = useIsMobile();
+  useGoalView(isMobile ? null : 'home_view', { screen: 'home', home_state: 'desktop' });
   if (isMobile) return <MobileHome />;
   return (
     <AppShell>
@@ -97,12 +100,24 @@ export function SearchPage() {
     setParams(next);
   };
   const resetSearch = () => {
+    trackGoal('filters_reset');
     rememberSearch(new URLSearchParams());
     setLoading(true);
   };
   const state = params.get('state');
   const found = state === 'empty' ? [] : filterListings(listings, params, favorites);
   const isFavorites = params.get('favorites') === '1';
+  useGoalView(isFavorites ? 'favorites_view' : 'search_view', {
+    screen: isFavorites ? 'favorites' : 'search',
+    status:
+      loading || state === 'loading'
+        ? 'loading'
+        : state === 'error'
+          ? 'error'
+          : found.length === 0
+            ? 'empty'
+            : 'results',
+  });
   return (
     <AppShell mobileApp>
       <PageLayout>
@@ -121,6 +136,7 @@ export function SearchPage() {
           <Sorting
             value={params.get('sort') || 'default'}
             onChange={(value) => {
+              trackGoal('sort_change', { sort: value });
               const next = new URLSearchParams(params);
               next.set('sort', value);
               apply(next);
@@ -174,6 +190,7 @@ export function SearchPage() {
             <p>Попробуйте ещё раз. Выбранные параметры сохранятся.</p>
             <Button
               onClick={() => {
+                trackGoal('search_retry');
                 const next = new URLSearchParams(params);
                 next.delete('state');
                 apply(next);
@@ -222,6 +239,7 @@ export function DetailPage() {
       ? candidate
       : '/search';
   const fromHome = from === '/' || from.startsWith('/?');
+  useGoalView(listing ? 'listing_view' : null, { screen: 'listing', listing_id: id });
   if (!listing) return <NotFoundPage />;
   return (
     <AppShell mobileApp>
@@ -233,7 +251,12 @@ export function DetailPage() {
             { label: listing.district },
           ]}
         />
-        <Link className={s.back} to={from} state={{ restoreScroll: location.state?.returnScroll }}>
+        <Link
+          className={s.back}
+          to={from}
+          state={{ restoreScroll: location.state?.returnScroll }}
+          onClick={() => trackGoal('listing_back', { destination: fromHome ? 'home' : 'search' })}
+        >
           {fromHome ? '← На главную' : '← К результатам поиска'}
         </Link>
         <div className={s.detailLabels}>
@@ -314,6 +337,7 @@ export function DetailPage() {
 }
 
 export function NotFoundPage() {
+  useGoalView('not_found_view', { screen: 'not_found' });
   return (
     <AppShell>
       <PageLayout>
@@ -321,7 +345,13 @@ export function NotFoundPage() {
           <Badge>404</Badge>
           <h1>Этой страницы пока нет</h1>
           <p>Вернитесь к поиску или начните с главной страницы.</p>
-          <Link className={s.primaryLink} to="/">
+          <Link
+            className={s.primaryLink}
+            to="/"
+            onClick={() =>
+              trackGoal('navigation_open', { destination: 'home', source: 'not_found' })
+            }
+          >
             На главную
           </Link>
         </section>
@@ -389,6 +419,7 @@ export function PatternsPage() {
         />
         <div className="stack">
           <h1>Компоненты страниц</h1>
+          <Link to="/map">Карта сценария и план A/B-теста →</Link>
           <p className="muted">Готовые композиции поверх общего UI kit.</p>
           <div className={s.patternLinks}>
             <Link to="/">Header · Footer · SearchBar</Link>

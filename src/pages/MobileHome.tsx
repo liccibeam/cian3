@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Icon, Modal, type IconName } from '@/ui';
 import { AppShell } from '@/components/Layout';
 import { ListingCard } from '@/components/Realty';
@@ -7,6 +7,8 @@ import { listings } from '@/data/listings';
 import { searchDescription, searchHref, searchTitle } from '@/data/searches';
 import { usePrototype } from '@/hooks/prototype-context';
 import s from './MobileHome.module.css';
+import { trackGoal } from '@/analytics/metrika';
+import { useGoalView } from '@/analytics/useGoalView';
 
 const verticals: { label: string; description: string; icon: IconName; demo?: string }[] = [
   { label: 'Купить', description: 'Квартиру для себя', icon: 'Key' },
@@ -33,8 +35,9 @@ const verticals: { label: string; description: string; icon: IconName; demo?: st
 
 export function MobileHome() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const { lastSearch, savedSearches, removeSearch, showDemo, rememberSearch } = usePrototype();
-  const [savedOpen, setSavedOpen] = useState(false);
+  const [savedOpen, setSavedOpen] = useState(params.get('panel') === 'saved');
   const resumeRef = useRef<HTMLAnchorElement>(null);
   const closeSaved = () => {
     setSavedOpen(false);
@@ -42,11 +45,24 @@ export function MobileHome() {
   };
   const resume = savedSearches[0] ?? lastSearch;
   const hasSaved = savedSearches.length > 0;
+  useGoalView(
+    'home_view',
+    {
+      screen: 'home',
+      home_state: hasSaved ? 'saved' : lastSearch !== null ? 'recent' : 'new',
+    },
+    'home',
+  );
+  useGoalView(savedOpen ? 'saved_list_view' : null, {
+    screen: 'saved_searches',
+    count: savedSearches.length,
+  });
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const params = new URLSearchParams();
     const q = String(new FormData(event.currentTarget).get('q') || '').trim();
     if (q) params.set('q', q);
+    trackGoal('search_submit', { screen: 'home', has_query: !!q });
     rememberSearch(params);
     navigate(searchHref(params.toString()));
   };
@@ -82,11 +98,24 @@ export function MobileHome() {
                 </>
               );
               return demo ? (
-                <button key={label} onClick={() => showDemo(demo)}>
+                <button
+                  key={label}
+                  onClick={() => {
+                    trackGoal('vertical_open', { screen: 'home', destination: label });
+                    showDemo(demo);
+                  }}
+                >
                   {content}
                 </button>
               ) : (
-                <Link key={label} to="/search" className={s.buy}>
+                <Link
+                  key={label}
+                  to="/search"
+                  className={s.buy}
+                  onClick={() =>
+                    trackGoal('vertical_open', { screen: 'home', destination: 'Купить' })
+                  }
+                >
                   {content}
                   <span className={s.buyArrow}>
                     <Icon name="ActionArrowUpRight16" size={20} />
@@ -102,12 +131,28 @@ export function MobileHome() {
             <div className={s.resumeHeader}>
               <span>{hasSaved ? 'Сохранённый поиск' : 'Вы недавно искали'}</span>
               {hasSaved && (
-                <button onClick={() => setSavedOpen(true)} aria-label="Все сохранённые поиски">
+                <button
+                  onClick={() => {
+                    trackGoal('saved_list_open', { screen: 'home' });
+                    setSavedOpen(true);
+                  }}
+                  aria-label="Все сохранённые поиски"
+                >
                   Все <Icon name="ActionChevronRight12" size={12} />
                 </button>
               )}
             </div>
-            <Link ref={resumeRef} to={searchHref(resume)} className={s.resumeLink}>
+            <Link
+              ref={resumeRef}
+              to={searchHref(resume)}
+              className={s.resumeLink}
+              onClick={() =>
+                trackGoal('search_resume', {
+                  screen: 'home',
+                  source: hasSaved ? 'saved' : 'recent',
+                })
+              }
+            >
               <span className={s.resumeIcon}>
                 <Icon name={hasSaved ? 'Bookmark' : 'ActionSearch16'} size={20} />
               </span>
@@ -126,7 +171,13 @@ export function MobileHome() {
               <h2 id="recommendations-title">Могут подойти</h2>
               <p>Квартиры в Москве</p>
             </div>
-            <Link to="/search" aria-label="Все объявления">
+            <Link
+              to="/search"
+              aria-label="Все объявления"
+              onClick={() =>
+                trackGoal('navigation_open', { destination: 'search', source: 'recommendations' })
+              }
+            >
               <Icon name="ActionChevronRight16" size={20} />
             </Link>
           </div>
@@ -155,7 +206,13 @@ export function MobileHome() {
               <ListingCard key={listing.id} listing={listing} compact feed />
             ))}
           </div>
-          <Link className={s.allListings} to="/search">
+          <Link
+            className={s.allListings}
+            to="/search"
+            onClick={() =>
+              trackGoal('navigation_open', { destination: 'search', source: 'feed_end' })
+            }
+          >
             Все квартиры в Москве <Icon name="ActionChevronRight16" size={16} />
           </Link>
         </section>
@@ -169,7 +226,13 @@ export function MobileHome() {
           <ul className={s.savedList}>
             {savedSearches.map((search) => (
               <li key={search}>
-                <Link to={searchHref(search)} onClick={() => setSavedOpen(false)}>
+                <Link
+                  to={searchHref(search)}
+                  onClick={() => {
+                    trackGoal('saved_search_open', { screen: 'saved_searches' });
+                    setSavedOpen(false);
+                  }}
+                >
                   <strong>{searchTitle(search)}</strong>
                   <span>{searchDescription(search)}</span>
                 </Link>

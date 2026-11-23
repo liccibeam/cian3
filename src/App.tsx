@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { UIKitPage } from './pages/UIKitPage';
 import { PrototypeProvider } from './hooks/PrototypeContext';
 import { RouteScroll } from './components/RouteScroll';
+import { ScenarioMap } from './pages/ScenarioMap';
 import {
   HomePage,
   SearchPage,
@@ -14,12 +15,18 @@ import {
 export default function App() {
   const { pathname } = useLocation();
   useEffect(() => {
-    document.title = pathname === '/ui' ? 'Циан · UI kit' : 'Циан · Прототипы';
+    document.title =
+      pathname === '/map'
+        ? 'Циан · Карта сценария и A/B-тест'
+        : pathname === '/ui'
+          ? 'Циан · UI kit'
+          : 'Циан · Прототипы';
   }, [pathname]);
   return (
     <PrototypeProvider>
       <RouteScroll />
       <Routes>
+        <Route path="/map" element={<ScenarioMap />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/listing/:id" element={<DetailPage />} />

@@ -1,10 +1,12 @@
 import { useState, type FormEvent, type MouseEvent } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Badge, Button, Icon, Input, Modal, Select } from '@/ui';
 import { usePrototype } from '@/hooks/prototype-context';
 import { listingLabel, money, type Listing } from '@/data/listings';
 import s from './Realty.module.css';
+import { trackGoal } from '@/analytics/metrika';
+import { useGoalView } from '@/analytics/useGoalView';
 
 export function FavoriteButton({ listing }: { listing: Listing }) {
   const { favorites, toggleFavorite } = usePrototype();
@@ -39,6 +41,15 @@ export function ListingCard({
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
       return;
     event.preventDefault();
+    trackGoal('listing_open', {
+      listing_id: listing.id,
+      source:
+        location.pathname === '/'
+          ? 'recommendations'
+          : location.search.includes('favorites=1')
+            ? 'favorites'
+            : 'search',
+    });
     navigate(to, {
       state: { from: location.pathname + location.search, returnScroll: window.scrollY },
     });
@@ -114,6 +125,7 @@ export function SearchBar() {
           const q = String(new FormData(event.currentTarget).get('q') || '').trim();
           const params = new URLSearchParams();
           if (q) params.set('q', q);
+          trackGoal('search_submit', { screen: 'home', has_query: !!q });
           rememberSearch(params);
           navigate(params.size ? `/search?${params}` : '/search');
         }}
@@ -161,6 +173,11 @@ export function SearchFilters({
       else next.delete(key);
     }
     next.delete('state');
+    trackGoal('filters_apply', {
+      has_query: next.has('q'),
+      has_rooms: next.has('rooms'),
+      has_budget: next.has('maxPrice'),
+    });
     onApply(next);
   }
   return (
@@ -219,15 +236,24 @@ export function Sorting({ value, onChange }: { value: string; onChange: (value: 
 }
 
 export function Gallery({ images, title }: { images: string[]; title: string }) {
+  const [params] = useSearchParams();
   const [index, setIndex] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(params.get('panel') === 'gallery');
+  useGoalView(open ? 'gallery_view' : null, { screen: 'gallery' });
+  const changePhoto = (next: number) => {
+    trackGoal('gallery_change', { photo_index: next + 1 });
+    setIndex(next);
+  };
   return (
     <div className={s.gallery}>
       <button
         type="button"
         className={s.galleryMain}
         aria-label="Открыть фотографии"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          trackGoal('gallery_open');
+          setOpen(true);
+        }}
       >
         <img src={images[index]} alt={`${title}, фото ${index + 1}`} />
         <span>
@@ -241,7 +267,7 @@ export function Gallery({ images, title }: { images: string[]; title: string }) 
             type="button"
             aria-label={`Фото ${i + 1}`}
             aria-pressed={index === i}
-            onClick={() => setIndex(i)}
+            onClick={() => changePhoto(i)}
           >
             <img src={src} alt="" />
           </button>
@@ -258,14 +284,14 @@ export function Gallery({ images, title }: { images: string[]; title: string }) 
             <Button
               theme="main_secondary"
               aria-label="Предыдущее фото"
-              onClick={() => setIndex((index + images.length - 1) % images.length)}
+              onClick={() => changePhoto((index + images.length - 1) % images.length)}
             >
               ← Назад
             </Button>
             <Button
               theme="main_secondary"
               aria-label="Следующее фото"
-              onClick={() => setIndex((index + 1) % images.length)}
+              onClick={() => changePhoto((index + 1) % images.length)}
             >
               Вперёд →
             </Button>
@@ -278,7 +304,9 @@ export function Gallery({ images, title }: { images: string[]; title: string }) 
 
 export function ListingActions({ listing }: { listing: Listing }) {
   const { notify } = usePrototype();
-  const [open, setOpen] = useState(false);
+  const [params] = useSearchParams();
+  const [open, setOpen] = useState(params.get('panel') === 'contact');
+  useGoalView(open ? 'contact_view' : null, { screen: 'contact', listing_id: listing.id });
   return (
     <section className={s.actionsPanel} aria-label="Стоимость и связь">
       <div className={s.priceRow}>
@@ -292,7 +320,14 @@ export function ListingActions({ listing }: { listing: Listing }) {
         <span>Ипотека</span>
         <span>Возможна</span>
       </div>
-      <Button fullWidth onClick={() => setOpen(true)} beforeIcon="ActionProfile24">
+      <Button
+        fullWidth
+        onClick={() => {
+          trackGoal('contact_open', { listing_id: listing.id });
+          setOpen(true);
+        }}
+        beforeIcon="ActionProfile24"
+      >
         Связаться с продавцом
       </Button>
       <div className={s.sellerInfo}>
@@ -310,6 +345,7 @@ export function ListingActions({ listing }: { listing: Listing }) {
           className="stack"
           onSubmit={(e) => {
             e.preventDefault();
+            trackGoal('contact_submit', { screen: 'contact', listing_id: listing.id });
             setOpen(false);
             notify('Сообщение сохранено в прототипе');
           }}
