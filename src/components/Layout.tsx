@@ -5,6 +5,7 @@ import { Button, Icon } from '@/ui';
 import { usePrototype } from '@/hooks/prototype-context';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import s from './Layout.module.css';
+import { trackGoal } from '@/analytics/metrika';
 
 const navigation = [
   'Аренда',
@@ -169,11 +170,19 @@ function MobileNavigation() {
     pathname === '/search' && new URLSearchParams(search).get('favorites') === '1';
   return (
     <nav className={s.tabbar} aria-label="Навигация приложения">
-      <Link to="/" aria-current={pathname === '/' ? 'page' : undefined}>
+      <Link
+        to="/"
+        aria-current={pathname === '/' ? 'page' : undefined}
+        onClick={() => trackGoal('navigation_open', { destination: 'home', source: 'tabbar' })}
+      >
         <Icon name="Home" size={24} />
         <span>Главная</span>
       </Link>
-      <Link to="/search" aria-current={pathname === '/search' && !isFavorites ? 'page' : undefined}>
+      <Link
+        to="/search"
+        aria-current={pathname === '/search' && !isFavorites ? 'page' : undefined}
+        onClick={() => trackGoal('navigation_open', { destination: 'search', source: 'tabbar' })}
+      >
         <Icon name="ActionSearch16" size={24} />
         <span>Поиск</span>
       </Link>
@@ -181,6 +190,7 @@ function MobileNavigation() {
         to="/search?favorites=1"
         aria-label={`Избранное: ${favorites.length}`}
         aria-current={isFavorites ? 'page' : undefined}
+        onClick={() => trackGoal('navigation_open', { destination: 'favorites', source: 'tabbar' })}
       >
         <span className={s.tabIcon}>
           <Icon name="Heart" size={24} />

@@ -1,0 +1,443 @@
+.page {
+  background: var(--background-secondary);
+  min-height: 100vh;
+  padding-bottom: 56px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 40px;
+  background: var(--background-primary);
+  border-bottom: 1px solid var(--stroke-divider-default);
+  font-size: 14px;
+}
+.header > span {
+  color: var(--text-secondary-default);
+}
+.header > a:last-child {
+  margin-left: auto;
+}
+.intro,
+.section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px;
+}
+.intro {
+  padding-top: 48px;
+  padding-bottom: 8px;
+}
+.intro h1 {
+  font-size: 40px;
+  line-height: 48px;
+  margin: 16px 0;
+}
+.intro > p {
+  color: var(--text-secondary-default);
+  max-width: 800px;
+}
+.anchors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 24px;
+  font-size: 14px;
+}
+.section {
+  scroll-margin-top: 16px;
+}
+.sectionTitle {
+  margin-bottom: 24px;
+}
+.sectionTitle > span {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--text-secondary-default);
+}
+.sectionTitle h2 {
+  margin-top: 4px;
+  font-size: 28px;
+  line-height: 36px;
+}
+.section > p {
+  margin: 16px 0;
+  max-width: 1040px;
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.toolbar p {
+  font-size: 14px;
+  color: var(--text-secondary-default);
+  max-width: 720px;
+}
+.toolbar > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+}
+.toolbar output {
+  width: 40px;
+  text-align: center;
+  font-size: 14px;
+}
+.mapViewport {
+  overflow: auto;
+  max-width: 100%;
+  border: 1px solid var(--stroke-divider-default);
+  border-radius: 16px;
+  background-color: var(--background-primary);
+  background-image: radial-gradient(var(--stroke-divider-default) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.mapViewport:focus-visible {
+  outline: 2px solid var(--stroke-control-focused);
+}
+.board {
+  position: relative;
+  transform-origin: top left;
+}
+.lane {
+  position: absolute;
+  width: 100%;
+  height: 670px;
+  border-bottom: 1px solid var(--stroke-divider-default);
+}
+.lane > h3 {
+  position: absolute;
+  left: 24px;
+  top: 16px;
+  font-size: 20px;
+}
+.laneSubtitle {
+  position: absolute;
+  left: 24px;
+  top: 44px;
+  font-size: 13px;
+  color: var(--text-secondary-default);
+}
+.arrows {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.arrows g > path {
+  fill: none;
+  stroke: var(--text-main-default);
+  stroke-width: 2;
+}
+.arrows .shortcut {
+  stroke-dasharray: 5 4;
+}
+.edgeLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  gap: 4px;
+  height: 90px;
+  text-align: center;
+}
+.edgeLabel code {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-main-default);
+  background: var(--background-primary);
+  padding: 2px;
+  overflow-wrap: anywhere;
+}
+.edgeLabel small {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-secondary-default);
+  max-width: 120px;
+}
+.shortcutLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--background-primary);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-main-default);
+}
+.shortcutLabel small {
+  color: var(--text-secondary-default);
+}
+.screenCard {
+  position: absolute;
+  width: 224px;
+  min-height: 428px;
+  background: var(--background-primary);
+  border: 1px solid var(--stroke-divider-default);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px #0d162e0a;
+  overflow: hidden;
+}
+.previewButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 12px 12px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: zoom-in;
+}
+.previewButton:focus-visible {
+  outline: 2px solid var(--stroke-control-focused);
+  outline-offset: -3px;
+}
+.screenTitle {
+  min-height: 36px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+.previewButton img {
+  border: 1px solid var(--stroke-divider-default);
+  border-radius: 8px;
+  object-fit: cover;
+}
+.screenGoal {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px 4px;
+}
+.screenGoal code {
+  color: var(--text-main-default);
+  font-size: 12px;
+  line-height: 18px;
+}
+.screenGoal > span {
+  color: var(--text-secondary-default);
+  font-size: 10px;
+  line-height: 14px;
+  overflow-wrap: anywhere;
+}
+.screenCard > a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 12px;
+  font-size: 12px;
+}
+.returnNotes {
+  padding: 24px;
+  margin-top: 16px;
+  border-radius: 12px;
+  background: var(--background-primary);
+}
+.returnNotes p {
+  font-size: 14px;
+  margin-top: 12px;
+}
+.page code {
+  font-family: Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+.lead {
+  font-size: 20px;
+  line-height: 28px;
+}
+.variants,
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 24px 0;
+}
+.variants article,
+.metricGrid article {
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--background-primary);
+}
+.variants article:last-child {
+  border: 1px solid var(--control-main-primary-default);
+}
+.variants h3,
+.metricGrid h3 {
+  margin-top: 12px;
+}
+.variants p,
+.metricGrid p {
+  font-size: 14px;
+  margin-top: 12px;
+}
+.metricGrid article > span {
+  font-size: 12px;
+  color: var(--text-secondary-default);
+}
+.calculator {
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--background-primary);
+  margin: 24px 0;
+}
+.calculatorInputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.calculator label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+.calculator input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--stroke-divider-default);
+  color: var(--text-primary-default);
+  background: var(--background-primary);
+}
+.calculator input:focus-visible {
+  outline: 2px solid var(--stroke-control-focused);
+}
+.calculatorResult {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--stroke-divider-default);
+  margin-top: 24px;
+  padding-top: 24px;
+}
+.calculatorResult strong {
+  font-size: 28px;
+  line-height: 36px;
+}
+.calculatorResult small,
+.assumption {
+  color: var(--text-secondary-default);
+  font-size: 13px;
+  line-height: 20px;
+}
+.tableScroll {
+  overflow: auto;
+  border: 1px solid var(--stroke-divider-default);
+  border-radius: 12px;
+  background: var(--background-primary);
+  margin-top: 24px;
+}
+.tableScroll table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+.tableScroll th,
+.tableScroll td {
+  border-bottom: 1px solid var(--stroke-divider-default);
+  padding: 12px 16px;
+}
+.tableScroll th {
+  color: var(--text-secondary-default);
+  font-weight: 400;
+}
+.journalActions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 24px 0;
+  font-size: 14px;
+}
+.journal {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+.journal li {
+  padding: 16px;
+  background: var(--background-primary);
+  border-radius: 12px;
+  min-width: 0;
+}
+.journal time {
+  display: block;
+  color: var(--text-secondary-default);
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.journal code {
+  font-size: 14px;
+}
+.journal pre {
+  font-size: 11px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-bottom: 0;
+}
+.emptyLog {
+  padding: 24px;
+  background: var(--background-primary);
+  border-radius: 12px;
+  color: var(--text-secondary-default);
+}
+.expanded {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+}
+.expanded img {
+  max-height: 60vh;
+  border: 1px solid var(--stroke-divider-default);
+  object-fit: contain;
+}
+@media (max-width: 760px) {
+  .header {
+    padding: 16px;
+    gap: 12px;
+    font-size: 12px;
+  }
+  .header > span {
+    display: none;
+  }
+  .intro,
+  .section {
+    padding: 24px 16px;
+  }
+  .intro h1 {
+    font-size: 30px;
+    line-height: 38px;
+  }
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .variants,
+  .metricGrid,
+  .calculatorInputs,
+  .journal {
+    grid-template-columns: 1fr;
+  }
+  .variants article,
+  .metricGrid article,
+  .calculator,
+  .returnNotes {
+    padding: 20px;
+  }
+  .sectionTitle h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
